@@ -19,7 +19,7 @@ class HeadHunterAPI(AbstcractAPI, ABC):
     """
 
     def __init__(self, area=113) -> None:
-        self.url = ''
+        self.url = 'https://api.hh.ru/vacancies'
         self.headers = {'User-Agent': 'HH-User_Agent'}
         self.params = {'text': '', 'page': 0, 'per_page': 5}
         self.vacancies = []
@@ -94,7 +94,7 @@ class Vacancy:
 
     def compare_salary(self, salary):
         if isinstance(salary, str) and '-' in salary:
-            salary_slice = salary.split('-')
+            salary_slice = salary.split('-', maxsplit=1)
             self.salary_min = int(''.join(filter(str.isdigit, salary_slice[0])))
             self.salary_max = int(''.join(filter(str.isdigit, salary_slice[1])))
         elif isinstance(salary, int):
@@ -112,7 +112,6 @@ class AbstractFile(ABC):
     """
     Для работы с файлами
     """
-
     @abstractmethod
     def add_data_to_dict(self, vacancy: Vacancy):
         pass
@@ -137,7 +136,7 @@ class JSONFile(AbstractFile, ABC):
     def add_data_to_dict(self, vacancy: Vacancy):
         with open(self.filename, 'a', encoding='UTF-8') as f:
             json.dump(vacancy.__dict__, f, ensure_ascii=False)
-            f.write('/n')
+            f.write('\n')
 
     def get_data(self):
         with open(self.filename, 'r', encoding='UTF-8') as f:
