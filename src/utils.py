@@ -9,6 +9,7 @@ def filtering_vacancies(vacancies_list, filter_words):
     for vacancy in vacancies_list:
         if vacancy.description:
             exclude = False
+
             for word in filter_words:
                 try:
                     if word.lower() in vacancy.title.lower() or word.lower() in vacancy.description.lower():
@@ -25,11 +26,11 @@ def formatting_vacancies_to_list(keyword):
     """
     Форматирование по з/п
     """
-    data = HeadHunterAPI.get_data(keyword=keyword)
+    data = HeadHunterAPI().get_data(keyword=keyword)
     vacancies = []
     for vacancy in data:
         snippet = vacancy['snippet']
-        salary = vacancies['salary']
+        salary = vacancy['salary']
         if salary:
             s_from = salary.get('from')
             s_to = salary.get('to')
@@ -56,6 +57,7 @@ def formatting_vacancies_to_list(keyword):
 
 
 def user_interaction():
+
     json_file = JSONFile('data/vacancies.json')
     platforms = ['HeadHunter']
 
@@ -84,7 +86,7 @@ def user_interaction():
 
     clean_data = input("Очистить список? y/n: ")
     if clean_data.lower() == 'y':
-        json_file.del_data_dict()
+        json_file.del_data()
 
     run_again = input("Повторить поиск? y/n: ")
     if run_again.lower() == 'y':
